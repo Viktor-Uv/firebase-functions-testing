@@ -29,22 +29,25 @@ export const addMessage = onRequest(async (req, res) => {
 // Listens for new messages added to /messages/:documentId/original
 // and saves an uppercased version of the message
 // to /messages/:documentId/uppercase
-export const makeUppercase = onDocumentCreated("/messages/{documentId}", (event) => {
-  if (!event.data) {
-    return logger.log("No data found");
+export const makeUppercase = onDocumentCreated(
+  "/messages/{documentId}",
+  (event) => {
+    if (!event.data) {
+      return logger.log("No data found");
+    }
+
+    // Grab the current value of what was written to Firestore.
+    const original = event.data.data().original;
+
+    // Access the parameter `{documentId}` with `event.params`
+    logger.log("Uppercasing", event.params.documentId, original);
+
+    const uppercase = original.toUpperCase();
+
+    // You must return a Promise when performing
+    // asynchronous tasks inside a function
+    // such as writing to Firestore.
+    // Setting an 'uppercase' field in a Firestore document returns a Promise.
+    return event.data.ref.set({uppercase}, {merge: true});
   }
-
-  // Grab the current value of what was written to Firestore.
-  const original = event.data.data().original;
-
-  // Access the parameter `{documentId}` with `event.params`
-  logger.log("Uppercasing", event.params.documentId, original);
-
-  const uppercase = original.toUpperCase();
-
-  // You must return a Promise when performing
-  // asynchronous tasks inside a function
-  // such as writing to Firestore.
-  // Setting an 'uppercase' field in a Firestore document returns a Promise.
-  return event.data.ref.set({uppercase}, {merge: true});
-});
+);
