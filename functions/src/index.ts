@@ -69,3 +69,45 @@ export const makeUppercase = onDocumentCreated(
     return await event.data.ref.set({uppercase}, {merge: true});
   }
 );
+
+/**
+ * DecodeHex Firebase Function
+ */
+export const decodeHex = onRequest((request: Request, response: Response) => {
+  logger.info("DecodeHex function called", {structuredData: true});
+
+  // Expecting ?hexString=...
+  const hexString = request.query.hexString;
+  if (!hexString || typeof hexString !== "string") {
+    response.status(400).send({
+      error: "Invalid input. Provide a 'hexString' as a query parameter.",
+    });
+    return;
+  }
+
+  try {
+    const decodedText = decodeHexString(hexString);
+    response.status(200).send({decodedText});
+  } catch (error) {
+    logger.error("Error decoding hex string", error);
+    response.status(500).send({
+      error: "Failed to decode hex string.",
+    });
+  }
+});
+
+/**
+ * Function to decode a hex-encoded string.
+ *
+ * @param {string} hexString - The hex-encoded string to decode.
+ * @return {string} The decoded text.
+ */
+const decodeHexString = (hexString: string): string => {
+  // Split into 4-character chunks (UTF-16 code units)
+  const hexPairs = hexString.match(/.{1,4}/g);
+  if (!hexPairs) return "";
+
+  return hexPairs
+    .map((hex) => String.fromCharCode(parseInt(hex, 16)))
+    .join("");
+};
