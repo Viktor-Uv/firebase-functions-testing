@@ -4,6 +4,7 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import {getStorage} from "firebase-admin/storage";
+import busboy from "busboy";
 import express, {Request, Response} from "express";
 
 initializeApp();
@@ -118,7 +119,6 @@ const decodeHexString = (hexString: string): string => {
  * Upload mimetype/form-data
  */
 app.post("/", async (req: Request, res: Response) => {
-  res.status(500).send("Not yet implemented");
 });
 
 export const uploadFile = onRequest({cors: true}, app);
