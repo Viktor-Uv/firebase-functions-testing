@@ -1,13 +1,15 @@
-// The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
 import * as logger from "firebase-functions/logger";
 import {onRequest} from "firebase-functions/v2/https";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
-// The Firebase Admin SDK to access Firestore.
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
-import type {Request, Response} from "express";
+import {getStorage} from "firebase-admin/storage";
+import express, {Request, Response} from "express";
 
 initializeApp();
+
+const app = express();
+app.use(express.json());
 
 /**
  * Hello World
@@ -111,3 +113,12 @@ const decodeHexString = (hexString: string): string => {
     .map((hex) => String.fromCharCode(parseInt(hex, 16)))
     .join("");
 };
+
+/**
+ * Upload mimetype/form-data
+ */
+app.post("/", async (req: Request, res: Response) => {
+  res.status(500).send("Not yet implemented");
+});
+
+export const uploadFile = onRequest({cors: true}, app);
