@@ -4,6 +4,9 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import {getStorage} from "firebase-admin/storage";
+import fs from "fs";
+import path from "path";
+import os from "os";
 import busboy from "busboy";
 import express, {Request, Response} from "express";
 
@@ -70,7 +73,7 @@ export const makeUppercase = onDocumentCreated(
     // such as writing to Firestore.
     // Setting an 'uppercase' field in a Firestore document returns a Promise
     return await event.data.ref.set({uppercase}, {merge: true});
-  }
+  },
 );
 
 /**
@@ -116,9 +119,83 @@ const decodeHexString = (hexString: string): string => {
 };
 
 /**
- * Upload mimetype/form-data
+ * Parses a single file from 'multipart/form-data'
+ * and uploads it to Google Cloud Storage.
+ *
+ * @param req HTTP request context.
+ * @param res HTTP response context.
  */
 app.post("/", async (req: Request, res: Response) => {
+  if (req.method !== "POST") {
+    res.status(405).send("Method not allowed");
+    return;
+  }
+
+  const bb = busboy({headers: req.headers});
+  const tmpdir = os.tmpdir();
+
+  let fileProcessed = false; // To track if a file has already been processed
+  let uploadFilePath: string;
+  let fileName: string;
+  const fileWrites: Promise<void>[] = [];
+
+  bb.on("file", (fieldname, file, {filename}) => {
+    if (fileProcessed) {
+      // If a second file is detected, reject the request
+      file.resume(); // Discard the file stream
+      res.status(400).send("Only one file upload is allowed.");
+      return;
+    }
+
+    fileProcessed = true;
+    console.log(`Processing file: ${filename}`);
+
+    // Temporary local file path
+    uploadFilePath = path.join(tmpdir, filename);
+    const writeStream = fs.createWriteStream(uploadFilePath);
+    file.pipe(writeStream);
+
+    // Track a file write completion
+    const fileWritePromise = new Promise<void>((resolve, reject) => {
+      file.on("end", () => writeStream.end());
+      writeStream.on("close", resolve);
+      writeStream.on("error", reject);
+    });
+    fileWrites.push(fileWritePromise);
+    fileName = filename;
+  });
+
+  bb.on("finish", async () => {
+    if (!fileProcessed) {
+      res.status(400).send("No file uploaded.");
+      return;
+    }
+
+    try {
+      // Wait for file writes to complete
+      await Promise.all(fileWrites);
+
+      // Upload the file to Google Cloud Storage
+      const storageBucket = getStorage().bucket();
+      const destination = path.basename(uploadFilePath); // GCS file name
+      await storageBucket.upload(uploadFilePath, {destination});
+
+      console.log(`File uploaded to GCS as ${destination}`);
+
+      // Clean up the local temporary file
+      fs.unlinkSync(uploadFilePath);
+
+      const fileRef = storageBucket.file(fileName);
+      await fileRef.makePublic();
+
+      return res.status(200).send({url: fileRef.publicUrl()});
+    } catch (error) {
+      console.error("Error processing file upload:", error);
+      return res.status(500).send("Error uploading file.");
+    }
+  });
+
+  bb.end(req.body);
 });
 
 export const uploadFile = onRequest({cors: true}, app);
