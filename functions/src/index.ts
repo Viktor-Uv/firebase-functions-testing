@@ -126,11 +126,6 @@ const decodeHexString = (hexString: string): string => {
  * @param res HTTP response context.
  */
 app.post("/", async (req: Request, res: Response) => {
-  if (req.method !== "POST") {
-    res.status(405).send("Method not allowed");
-    return;
-  }
-
   const bb = busboy({headers: req.headers});
   const tmpdir = os.tmpdir();
 
