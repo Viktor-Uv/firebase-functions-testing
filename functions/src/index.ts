@@ -126,14 +126,14 @@ app.post("/", async (req: Request, res: Response) => {
   try {
     const file = await parseFileStream(req);
 
-    console.log("File parsed:", file.fieldname, file.filename, file.mimetype);
+    logger.info("File parsed:", file.fieldname, file.filename, file.mimetype);
 
     const fileUrl = await upload(file);
 
     res.status(200).send({url: fileUrl});
   } catch (error) {
-    console.error("Error:", error);
-    res.status(400).send((error as Error).message);
+    logger.error("Error:", error);
+    res.status(400).send({error: (error as Error).message});
   }
 });
 

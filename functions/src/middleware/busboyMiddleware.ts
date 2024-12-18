@@ -16,16 +16,20 @@ export interface ParsedFileStream {
  * @return {Promise<ParsedFileStream>} A promise with the parsed file stream
  */
 export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
-  const bb = busboy({headers: req.headers});
+  const headers = req.headers;
+  if (!headers["content-type"] || !headers["content-type"].startsWith("multipart/form-data")) {
+    return Promise.reject(new Error("Invalid content type. Expected multipart/form-data."));
+  }
 
   return new Promise((resolve, reject) => {
+    const bb = busboy({headers});
     let fileProcessed = false;
 
     bb.on("file", (fieldname, file, {filename, mimeType}) => {
       if (fileProcessed) {
         // Reject if more than one file is uploaded
         file.resume(); // Discard the stream
-        return reject(new Error("One file per upload is allowed."));
+        return reject(new Error("Only one file per upload is allowed."));
       }
 
       fileProcessed = true;
