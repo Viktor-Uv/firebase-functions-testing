@@ -17,8 +17,11 @@ export interface ParsedFileStream {
  */
 export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
   const headers = req.headers;
-  if (!headers["content-type"] || !headers["content-type"].startsWith("multipart/form-data")) {
-    return Promise.reject(new Error("Invalid content type. Expected multipart/form-data."));
+  const contentType = headers["content-type"];
+  if (!contentType || !contentType.startsWith("multipart/form-data")) {
+    return Promise.reject(
+      new Error("Invalid content type. Expected multipart/form-data."),
+    );
   }
 
   return new Promise((resolve, reject) => {
