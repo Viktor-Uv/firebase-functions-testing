@@ -20,8 +20,8 @@ export const upload = async (file: ParsedFileStream): Promise<string> => {
 
     file.stream
       .pipe(writeStream)
-      .on("finish", () => {
-        gcsFile.makePublic();
+      .on("finish", async () => {
+        await gcsFile.makePublic();
         console.log(`File ${file.filename} uploaded to GCS.`);
         resolve(gcsFile.publicUrl());
       })
