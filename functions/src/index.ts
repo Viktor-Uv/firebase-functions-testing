@@ -3,14 +3,11 @@ import {onRequest} from "firebase-functions/v2/https";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
-import express, {Request, Response} from "express";
+import {Request, Response} from "express";
 import {parseFileStream} from "middleware/busboyMiddleware";
 import {upload} from "repository/gcsRepository";
 
 initializeApp();
-
-const app = express();
-app.use(express.json());
 
 /**
  * Hello World
@@ -122,17 +119,23 @@ const decodeHexString = (hexString: string): string => {
  * @param req HTTP request context.
  * @param res HTTP response context.
  */
-app.post("/", async (req: Request, res: Response) => {
-  try {
-    const file = await parseFileStream(req);
+export const uploadFile = onRequest(
+  {cors: true},
+  async (req: Request, res: Response) => {
+    if (req.method !== "POST") {
+      res.status(405).send({error: "Method not allowed"});
+      return;
+    }
 
-    const fileUrl = await upload(file);
+    try {
+      const file = await parseFileStream(req);
 
-    res.status(200).send({url: fileUrl});
-  } catch (error) {
-    logger.error("Error:", error);
-    res.status(400).send({error: (error as Error).message});
-  }
-});
+      const fileUrl = await upload(file);
 
-export const uploadFile = onRequest({cors: true}, app);
+      res.status(200).send({url: fileUrl});
+    } catch (error) {
+      logger.error("Error:", error);
+      res.status(400).send({error: (error as Error).message});
+    }
+  },
+);
