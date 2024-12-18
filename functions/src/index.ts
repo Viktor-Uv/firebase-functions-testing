@@ -1,4 +1,4 @@
-import * as logger from "firebase-functions/logger";
+import logger from "firebase-functions/logger";
 import {onRequest} from "firebase-functions/v2/https";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
@@ -125,8 +125,6 @@ const decodeHexString = (hexString: string): string => {
 app.post("/", async (req: Request, res: Response) => {
   try {
     const file = await parseFileStream(req);
-
-    logger.info("File parsed:", file.filename, file.mimetype);
 
     const fileUrl = await upload(file);
 

@@ -1,11 +1,16 @@
 import busboy from "busboy";
 import {Request} from "express";
+import logger from "firebase-functions/logger";
 
 export interface ParsedFileStream {
   filename: string;
+  filesizeKb: number;
   mimetype: string;
   stream: NodeJS.ReadableStream;
 }
+
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 /**
  * Parses a single file from a `multipart/form-data` request
@@ -26,6 +31,7 @@ export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
   return new Promise((resolve, reject) => {
     const bb = busboy({headers});
     let fileProcessed = false;
+    let bytesTotal = 0;
 
     bb.on("file", (fieldname, file, {filename, mimeType}) => {
       if (fileProcessed) {
@@ -34,12 +40,34 @@ export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
         return reject(new Error("Only one file per upload is allowed."));
       }
 
+      // Mark the first file as processed
       fileProcessed = true;
 
-      resolve({
-        filename,
-        mimetype: mimeType,
-        stream: file, // Pass the readable stream directly
+      file.on("data", (chunk) => {
+        bytesTotal += chunk.length; // Accumulate chunk size
+        if (bytesTotal > MAX_FILE_SIZE_BYTES) {
+          file.resume(); // Discard the stream
+          return reject(new Error(
+            `File size exceeds the limit of ${MAX_FILE_SIZE_MB} MB.`),
+          );
+        }
+      });
+
+      file.on("end", () => {
+        const filesize = Math.round(bytesTotal / 1024);
+
+        logger.info("File parsed:", filename, `${filesize}KB`, mimeType);
+
+        resolve({
+          filename,
+          filesizeKb: filesize,
+          mimetype: mimeType,
+          stream: file, // Pass the readable stream directly
+        });
+      });
+
+      file.on("error", (err) => {
+        reject(err); // Handle stream errors
       });
     });
 
