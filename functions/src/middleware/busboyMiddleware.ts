@@ -4,7 +4,6 @@ import logger from "firebase-functions/logger";
 
 export interface ParsedFileStream {
   filename: string;
-  filesizeKb: number;
   mimetype: string;
   stream: NodeJS.ReadableStream;
 }
@@ -54,13 +53,13 @@ export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
       });
 
       file.on("end", () => {
-        const filesize = Math.round(bytesTotal / 1024);
+        // Convert bytesTotal to kilobytes with two decimal places
+        const filesize = Math.round(100 * bytesTotal / 1024) / 100;
 
         logger.info("File parsed:", filename, `${filesize}KB`, mimeType);
 
         resolve({
           filename,
-          filesizeKb: filesize,
           mimetype: mimeType,
           stream: file, // Pass the readable stream directly
         });
