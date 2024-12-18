@@ -1,5 +1,5 @@
 import {getStorage} from "firebase-admin/storage";
-import {ParsedFileStream} from "../middleware/busboyMiddleware.js";
+import {ParsedFileStream} from "middleware/busboyMiddleware";
 
 /**
  * Streams a file to Google Cloud Storage, default bucket

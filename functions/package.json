@@ -2,7 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "build": "rm -rf lib && tsc",
+    "build": "rm -rf lib && tsc && tsc-alias",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "serve-all":"npm run build && firebase emulators:start",
@@ -29,7 +29,8 @@
     "eslint-plugin-import": "^2.25.4",
     "firebase-functions-test": "^3.1.0",
     "busboy": "^1.6.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "tsc-alias": "^1.8.10"
   },
   "private": true,
   "type": "module"

@@ -11,10 +11,18 @@
     "sourceMap": true,
     "strict": true,
     "target": "ESNext",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "middleware/*": ["src/middleware/*"],
+      "repository/*": ["src/repository/*"],
+    }
   },
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  }
 }

@@ -4,8 +4,8 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
 import express, {Request, Response} from "express";
-import {parseFileStream} from "./middleware/busboyMiddleware.js";
-import {upload} from "./repository/gcsRepository.js";
+import {parseFileStream} from "middleware/busboyMiddleware";
+import {upload} from "repository/gcsRepository";
 
 initializeApp();
 
