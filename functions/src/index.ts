@@ -126,7 +126,7 @@ app.post("/", async (req: Request, res: Response) => {
   try {
     const file = await parseFileStream(req);
 
-    logger.info("File parsed:", file.fieldname, file.filename, file.mimetype);
+    logger.info("File parsed:", file.filename, file.mimetype);
 
     const fileUrl = await upload(file);
 

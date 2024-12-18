@@ -2,7 +2,6 @@ import busboy from "busboy";
 import {Request} from "express";
 
 export interface ParsedFileStream {
-  fieldname: string;
   filename: string;
   mimetype: string;
   stream: NodeJS.ReadableStream;
@@ -38,7 +37,6 @@ export const parseFileStream = (req: Request): Promise<ParsedFileStream> => {
       fileProcessed = true;
 
       resolve({
-        fieldname,
         filename,
         mimetype: mimeType,
         stream: file, // Pass the readable stream directly
