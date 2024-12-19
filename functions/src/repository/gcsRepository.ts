@@ -1,4 +1,4 @@
-import {getStorage} from "firebase-admin/storage";
+import {storageBucket} from "shared/firebaseAdmin";
 import {ParsedFileStream} from "middleware/busboyMiddleware";
 
 /**
@@ -8,7 +8,7 @@ import {ParsedFileStream} from "middleware/busboyMiddleware";
  * @return {Promise<string>} A promise that resolves with uploaded file url
  */
 export const upload = async (file: ParsedFileStream): Promise<string> => {
-  const storageBucket = getStorage().bucket();
+  // const storageBucket = getStorage().bucket();
   const gcsFile = storageBucket.file(file.filename);
 
   return new Promise((resolve, reject) => {

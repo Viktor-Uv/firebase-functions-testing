@@ -1,13 +1,14 @@
 import logger from "firebase-functions/logger";
 import {onRequest} from "firebase-functions/v2/https";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
-import {initializeApp} from "firebase-admin/app";
+// import {initializeApp} from "firebase-admin/app";
+import "shared/firebaseAdmin";
 import {getFirestore} from "firebase-admin/firestore";
 import {Request, Response} from "express";
 import {parseFileStream} from "middleware/busboyMiddleware";
 import {upload} from "repository/gcsRepository";
 
-initializeApp();
+// initializeApp();
 
 /**
  * Hello World

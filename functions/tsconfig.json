@@ -15,6 +15,7 @@
     "paths": {
       "middleware/*": ["src/middleware/*"],
       "repository/*": ["src/repository/*"],
+      "shared/*": ["src/shared/*"],
     }
   },
   "compileOnSave": true,
