@@ -1,8 +1,9 @@
-name: on-pull-request
+name: Automatic Checks
 on: pull_request
 
 jobs:
-  check-format:
+  format:
+    name: Check Code Formatting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -15,7 +16,8 @@ jobs:
         run: npm run format
         working-directory: functions
 
-  check-build:
+  build:
+    name: Check Project Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -28,7 +30,8 @@ jobs:
         run: npm run build
         working-directory: functions
 
-  run-tests:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -41,7 +44,8 @@ jobs:
         run: npm test
         working-directory: functions
 
-  run-test-emulators:
+  test-emulators:
+    name: Run Tests:Emulators
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
