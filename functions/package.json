@@ -13,7 +13,7 @@
     "emulators": "firebase emulators:start",
     "format": "echo \"test of format script - OK\" && exit 0",
     "test": "echo \"test of test script - OK\" && exit 0",
-    "test:emulators": "firebase emulators:exec \"npm test\""
+    "test:emulators": "firebase emulators:exec --only firestore \"npm test\""
   },
   "engines": {
     "node": "18"
