@@ -8,10 +8,6 @@ runs:
       with:
         node-version: '18'
 
-    - name: Install Dependencies in root
-      run: npm install
-      shell: bash
-
     - name: Install Dependencies in functions
       run: npm install
       shell: bash
