@@ -12,7 +12,10 @@ runs:
       run: npm install
       shell: bash
 
+    - name: Set working directory to functions
+      run: cd functions
+      shell: bash
+
     - name: Install Dependencies in functions
       run: npm install
       shell: bash
-      working-directory: functions
