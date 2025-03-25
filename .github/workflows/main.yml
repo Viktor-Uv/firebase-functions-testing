@@ -1,0 +1,26 @@
+name: Run actions on pull requests
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run Prettier Check
+        run: npm run format
+
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run Tests
+        run: npm test
