@@ -1,3 +1,4 @@
+name: Run checks on pull requests
 on:
   pull_request:
     types: [opened, synchronize, reopened]
