@@ -1,8 +1,8 @@
-name: Run checks on pull requests
+name: on-pull-request
 on: pull_request
 
 jobs:
-  format:
+  check-format:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -15,7 +15,20 @@ jobs:
         run: npm run format
         working-directory: functions
 
-  test:
+  check-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run Build
+        run: npm run build
+        working-directory: functions
+
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -26,4 +39,17 @@ jobs:
 
       - name: Run Tests
         run: npm test
+        working-directory: functions
+
+  run-test-emulators:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run test:emulators
+        run: npm test:emulators
         working-directory: functions
