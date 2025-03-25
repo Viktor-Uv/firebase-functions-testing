@@ -16,6 +16,20 @@ jobs:
         run: npm run format
         working-directory: functions
 
+  lint:
+    name: Check Code Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run ESLint Check
+        run: npm run lint
+        working-directory: functions
+
   build:
     name: Check Project Build
     runs-on: ubuntu-latest
