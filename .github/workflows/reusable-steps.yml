@@ -22,12 +22,10 @@ jobs:
       - name: Install Dependencies in root
         run: npm install
 
-      - name: Set Working Directory to functions
-        run: cd functions
-
       - name: Install Dependencies in functions
         run: npm install
         working-directory: functions
 
       - name: Run Command
         run: ${{ inputs.command }}
+        working-directory: functions
