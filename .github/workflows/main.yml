@@ -1,9 +1,17 @@
-name: Run checks on pull requests
-on: pull_request
+name: Run actions on pull requests
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
-  format:
+  check-formatting:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -13,10 +21,12 @@ jobs:
 
       - name: Run Prettier Check
         run: npm run format
-        working-directory: functions
 
-  test:
+  run-tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -26,4 +36,3 @@ jobs:
 
       - name: Run Tests
         run: npm test
-        working-directory: functions
