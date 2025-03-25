@@ -1,4 +1,4 @@
-name: Pull Request Checks
+name: on-pull-request
 on: pull_request
 
 jobs:
