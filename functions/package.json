@@ -12,7 +12,7 @@
     "logs": "firebase functions:log",
     "emulators": "firebase emulators:start",
     "format": "echo \"test of format script - OK\" && exit 0",
-    "test": "echo \"test of test script - OK\" && exit 0"
+    "test": "echo \"test of test script - KO\" && exit 1"
   },
   "engines": {
     "node": "18"
