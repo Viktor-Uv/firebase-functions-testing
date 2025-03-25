@@ -1,17 +1,38 @@
-name: Run checks on pull requests
+name: Run actions on pull requests
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
-  format:
-    name: Check Formatting
-    uses: ./.github/workflows/reusable-steps.yml
-    with:
-      command: 'npm run format'
+  check-formatting:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  test:
-    name: Run Tests
-    uses: ./.github/workflows/reusable-steps.yml
-    with:
-      command: 'npm test'
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run Prettier Check
+        run: npm run format
+
+  run-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-node-npm
+
+      - name: Run Tests
+        run: npm test
