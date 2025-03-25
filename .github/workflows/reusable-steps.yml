@@ -27,6 +27,7 @@ jobs:
 
       - name: Install Dependencies in functions
         run: npm install
+        working-directory: functions
 
       - name: Run Command
         run: ${{ inputs.command }}
