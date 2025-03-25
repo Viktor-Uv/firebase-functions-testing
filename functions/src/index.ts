@@ -13,7 +13,7 @@ import {upload} from "repository/gcsRepository";
 /**
  * Hello World
  */
-export const helloWorld = onRequest((request: Request, response: Response) => {
+export const helloWorld = onRequest(async (request: Request, response: Response) => {
   logger.info("Hello logs!", {structuredData: true});
   response.send("Hello from Firebase!");
 });
