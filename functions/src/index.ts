@@ -10,7 +10,7 @@ import {Request, Response} from "express";
  */
 export const helloWorld = onRequest(async (request, response: Response) => {
   logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+  response.send("Hello from Firebase Functions!");
 });
 
 /**
