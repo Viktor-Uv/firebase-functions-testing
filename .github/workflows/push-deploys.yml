@@ -4,24 +4,22 @@ on:
     branches: [main, stage]
 
 jobs:
-  build_and_deploy:
-    name: Deploy to Firebase Functions
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Environment
         uses: ./.github/actions/setup-node-npm
 
-      - name: Create credentials.json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "credentials.json"
-          json: "${{ secrets.GCP_SA_KEY }}"
+      - name: Decode Service Account Key
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" | base64 --decode > $GITHUB_WORKSPACE/firebase-service-account.json
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
-      - name: Set environment variable with path to credentials.json
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f credentials.json)" >> $GITHUB_ENV
-
-      - name: Deploy to Firebase
+      - name: Deploy to Firebase Functions
         run: npx firebase deploy --only functions
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/firebase-service-account.json
