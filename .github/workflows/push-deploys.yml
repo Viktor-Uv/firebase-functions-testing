@@ -15,11 +15,9 @@ jobs:
 
       - name: Write Service Account Key file
         run: |
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > $GITHUB_WORKSPACE/firebase-service-account.json
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          printf '%s' "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > $GITHUB_WORKSPACE/firebase-service-account.json
 
       - name: Deploy to Firebase Functions
         run: npx firebase deploy --only functions
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/firebase-service-account.json
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/service-account.json
