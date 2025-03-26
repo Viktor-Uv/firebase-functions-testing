@@ -71,14 +71,3 @@ jobs:
       - name: Run test:emulators
         run: npm run test:emulators
         working-directory: functions
-
-  validate-pr:
-    name: Check PR Source for 'main' originates from 'stage'
-    runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.base.ref == 'main' }}
-    steps:
-      - run: |
-          if [ "${{ github.head_ref }}" != "stage" ]; then
-            echo "Error: PR to main must originate from the 'stage' branch."
-            exit 1
-          fi
