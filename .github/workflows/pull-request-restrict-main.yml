@@ -9,6 +9,7 @@ jobs:
     steps:
       - name: Ensure PR originates from 'stage'
         run: |
+          echo "PR Source: ${{ github.head_ref }}"
           if [ "${{ github.head_ref }}" != "stage" ]; then
             echo "Error: PR to main must come from the stage branch."
             exit 1
