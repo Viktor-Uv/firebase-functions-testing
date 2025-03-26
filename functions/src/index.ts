@@ -4,15 +4,13 @@ import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import "shared/firebaseAdmin";
 import {getFirestore} from "firebase-admin/firestore";
 import {Request, Response} from "express";
-import {parseFileStream} from "middleware/busboyMiddleware";
-import {upload} from "repository/gcsRepository";
 
 /**
  * Hello World
  */
 export const helloWorld = onRequest(async (request, response: Response) => {
   logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase Functions!");
+  response.send("Hello from Firebase!");
 });
 
 /**
@@ -109,30 +107,3 @@ const decodeHexString = (hexString: string): string => {
     .map((hex) => String.fromCharCode(parseInt(hex, 16)))
     .join("");
 };
-
-/**
- * Parses a single file from 'multipart/form-data'
- * and uploads it to Google Cloud Storage.
- *
- * @param req HTTP request context.
- * @param res HTTP response context.
- */
-export const uploadFile = onRequest(async (req: Request, res: Response) => {
-  if (req.method !== "POST") {
-    res.status(405).send({error: "Method not allowed"});
-    return;
-  }
-
-  try {
-    const file = await parseFileStream(req);
-
-    console.log(file);
-
-    const fileUrl = await upload(file);
-
-    res.status(200).send({url: fileUrl});
-  } catch (error) {
-    logger.error("Error:", error);
-    res.status(400).send({error: (error as Error).message});
-  }
-});
