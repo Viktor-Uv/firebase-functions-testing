@@ -1,4 +1,4 @@
-name: Validate PR source for the Main branch
+name: Validate PR source for 'main' is 'stage'
 on:
   pull_request:
     branches: [main]
