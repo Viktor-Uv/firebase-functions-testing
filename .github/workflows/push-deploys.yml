@@ -19,12 +19,4 @@ jobs:
           credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
 
       - name: Deploy to Firebase Functions
-        run: |
-          echo "-- debug credentials path"
-          echo $GOOGLE_APPLICATION_CREDENTIAL
-          echo "-- debug credentials content"
-          cat ${GITHUB_WORKSPACE}/service-account.json
-          echo "-- start deploy"
-          npx firebase deploy --only functions
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${GITHUB_WORKSPACE}/service-account.json
+        run: npx firebase deploy --only functions
