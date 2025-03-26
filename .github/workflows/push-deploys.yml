@@ -1,7 +1,7 @@
 name: Deploy to Firebase Functions on push
 on:
   push:
-    branches: [stage]
+    branches: [main]
 
 jobs:
   deploy:
