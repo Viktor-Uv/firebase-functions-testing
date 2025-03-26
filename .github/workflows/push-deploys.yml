@@ -15,7 +15,7 @@ jobs:
 
       - name: Write Service Account Key file
         run: |
-          echo "SERVICE_ACCOUNT" > "${HOME}/service-account.json"
+          echo "$SERVICE_ACCOUNT" > "${HOME}/service-account.json"
           export GOOGLE_APPLICATION_CREDENTIALS="${HOME}/service-account.json"
         env:
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
