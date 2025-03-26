@@ -23,7 +23,7 @@ jobs:
       - name: Deploy to Firebase Functions
         run: |
           echo "-- debug credentials path"
-          cat $GOOGLE_APPLICATION_CREDENTIAL
+          echo $GOOGLE_APPLICATION_CREDENTIAL
           echo "-- debug credentials content"
           cat ${GITHUB_WORKSPACE}/service-account.json
           echo "-- start deploy"
