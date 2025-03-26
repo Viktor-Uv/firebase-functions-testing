@@ -1,0 +1,15 @@
+name: Validate PR source for the Main branch
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure PR originates from 'stage'
+        run: |
+          if [ "${{ github.head_ref }}" != "stage" ]; then
+            echo "Error: PR to main must come from the stage branch."
+            exit 1
+          fi
