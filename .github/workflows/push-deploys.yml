@@ -13,12 +13,10 @@ jobs:
       - name: Setup Environment
         uses: ./.github/actions/setup-node-npm
 
-      - name: Write Service Account Key file
-        run: |
-          echo "$SERVICE_ACCOUNT" > "${GITHUB_WORKSPACE}/service-account.json"
-          export GOOGLE_APPLICATION_CREDENTIALS="${GITHUB_WORKSPACE}/service-account.json"
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
 
       - name: Deploy to Firebase Functions
         run: |
