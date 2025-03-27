@@ -20,7 +20,7 @@ jobs:
 
       - name: Create local .env file from secrets
         run: |
-          echo "APPLICATION_ID=${{ secrets.APPLICATION_ID }}" > ${{ env.ENV_FILE }}
+          echo "APPLICATION_IDD=${{ secrets.APPLICATION_IDD }}" > ${{ env.ENV_FILE }}
           echo "SERVICE_ID=${{ secrets.SERVICE_ID }}" >> ${{ env.ENV_FILE }}
         working-directory: functions
         env:
