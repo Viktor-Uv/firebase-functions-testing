@@ -6,12 +6,22 @@ import {appId, serviceId, superSecret} from "shared/secrets";
 import {getFirestore} from "firebase-admin/firestore";
 import {Request, Response} from "express";
 
+import fs from "fs";
+import path from "path";
+import {fileURLToPath} from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /**
  * Hello World
  */
 export const helloWorld = onRequest(
   {secrets: [superSecret]},
   async (request, response: Response) => {
+    const envFile = path.join(__dirname, "..", ".env.firetest-44");
+    const envFileContent = fs.readFileSync(envFile, "utf8");
+    logger.info(`.env.firetest-44: ${envFileContent}`);
+
     logger.info("Hello logs!", {structuredData: true});
     logger.info(
       `AppId: ${appId.value()},
