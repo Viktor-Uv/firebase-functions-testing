@@ -6,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ENV_FILE: .env.firetest-44
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -17,6 +19,12 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+
+      - name: Create local .env file from secrets
+        run: |
+          echo "APPLICATION_ID=${{ secrets.APPLICATION_ID }}" > ${{ env.ENV_FILE }}
+          echo "SERVICE_ID=${{ secrets.SERVICE_ID }}" >> ${{ env.ENV_FILE }}
+        working-directory: functions
 
       - name: Deploy to Firebase Functions
         run: npx firebase deploy --only functions
