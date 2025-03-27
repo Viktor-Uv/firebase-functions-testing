@@ -9,15 +9,18 @@ import {Request, Response} from "express";
 /**
  * Hello World
  */
-export const helloWorld = onRequest(async (request, response: Response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  logger.info(
-    `AppId: ${appId.value()},
+export const helloWorld = onRequest(
+  {secrets: [superSecret]},
+  async (request, response: Response) => {
+    logger.info("Hello logs!", {structuredData: true});
+    logger.info(
+      `AppId: ${appId.value()},
     ServiceId: ${serviceId.value()},
-    SuperSecret: ${superSecret.value()}`
-  );
-  response.send("Hello from Firebase Functions!");
-});
+    SuperSecret: ${superSecret.value()}`,
+    );
+    response.send("Hello from Firebase Functions!");
+  },
+);
 
 /**
  * Take the text parameter passed to this HTTP endpoint and insert it into
