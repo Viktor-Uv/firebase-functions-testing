@@ -18,5 +18,11 @@ jobs:
         with:
           credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
 
+      - name: Create local .env file from secrets
+        run: |
+          echo "SEARCH_ALGOLIA_APP_ID=${{ secrets.SEARCH_ALGOLIA_APP_ID }}" > .env.firetest-44
+          echo "APPLICATION_SERVICE_USER_ID=${{ secrets.APPLICATION_SERVICE_USER_ID }}" >> .env.firetest-44
+        working-directory: functions
+
       - name: Deploy to Firebase Functions
         run: npx firebase deploy --only functions
