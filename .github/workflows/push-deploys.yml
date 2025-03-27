@@ -20,8 +20,8 @@ jobs:
 
       - name: Create local .env file from secrets
         run: |
-          echo "SEARCH_ALGOLIA_APP_ID=${{ secrets.SEARCH_ALGOLIA_APP_ID }}" > .env.firetest-44
-          echo "APPLICATION_SERVICE_USER_ID=${{ secrets.APPLICATION_SERVICE_USER_ID }}" >> .env.firetest-44
+          echo "SEARCH_ALGOLIA_APP_ID=${{ secrets.APPLICATION_ID }}" > .env.firetest-44
+          echo "APPLICATION_SERVICE_USER_ID=${{ secrets.SERVICE_ID }}" >> .env.firetest-44
         working-directory: functions
 
       - name: Deploy to Firebase Functions
