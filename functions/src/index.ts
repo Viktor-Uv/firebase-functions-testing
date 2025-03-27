@@ -2,7 +2,7 @@ import logger from "firebase-functions/logger";
 import {onRequest} from "firebase-functions/v2/https";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import "shared/firebaseAdmin";
-import {appId, serviceId} from "shared/secrets";
+import {appId, serviceId, superSecret} from "shared/secrets";
 import {getFirestore} from "firebase-admin/firestore";
 import {Request, Response} from "express";
 
@@ -11,7 +11,11 @@ import {Request, Response} from "express";
  */
 export const helloWorld = onRequest(async (request, response: Response) => {
   logger.info("Hello logs!", {structuredData: true});
-  logger.info(`AppId: ${appId.value()}, ServiceId: ${serviceId.value()}`);
+  logger.info(
+    `AppId: ${appId.value()},
+    ServiceId: ${serviceId.value()},
+    SuperSecret: ${superSecret.value()}`
+  );
   response.send("Hello from Firebase Functions!");
 });
 
